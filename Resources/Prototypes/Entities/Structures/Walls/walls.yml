@@ -914,7 +914,7 @@
     graph: Girder
     node: wall
   - type: Icon
-    sprite: _FunkystationStructures/Walls/solid.rsi #Funky station
+    sprite: _Funkystation/Structures/Walls/solid.rsi #Funky station
   - type: RCDDeconstructable
     cost: 60 # Funkystation
     delay: 8
