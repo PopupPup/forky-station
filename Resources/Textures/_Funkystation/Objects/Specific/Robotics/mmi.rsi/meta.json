@@ -1,12 +1,15 @@
 {
   "version": 1,
   "license": "CC-BY-NC-3.0",
-  "copyright": "vectorassembly",
+  "copyright": "vectorassembly with mmi_icon by PopUpPup derived from art by vectorassembly",
   "size": {
     "x": 32,
     "y": 32
   },
   "states": [
+    {
+      "name": "mmi_icon"
+    },
     {
       "name": "mmi_off"
     },
