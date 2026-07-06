@@ -1,7 +1,7 @@
 {
   "version": 1,
   "license": "CC-BY-NC-4.0",
-  "copyright": "vectorassembly, paper-inhand-left.png and paper-inhand-right.png by PopUpPup derived from paper.png by vectorassembly",
+  "copyright": "vectorassembly, paper-inhand-left.png, paper-inhand-right.png, generic-materials.png by PopUpPup derived from art by vectorassembly",
   "size": {
     "x": 32,
     "y": 32
@@ -74,6 +74,9 @@
     {
       "name": "uranium-inhand-right",
       "directions": 4
+    },
+    {
+      "name": "generic_materials"
     }
   ]
 }

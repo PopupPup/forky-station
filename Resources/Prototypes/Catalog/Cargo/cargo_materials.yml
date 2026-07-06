@@ -126,7 +126,7 @@
 - type: cargoProduct
   id: MaterialBasic
   icon:
-    sprite:Objects/Materials/Sheets/other.rsi
+    sprite: _Funkystation/Objects/Materials/Sheets/other.rsi
     state: generic_materials
   product: CrateMaterialBasicResource
   cost: 1660
