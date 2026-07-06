@@ -1,7 +1,7 @@
 - type: cargoProduct
   id: MaterialGlass
   icon:
-    sprite: Objects/Materials/Sheets/glass.rsi
+    sprite: _Funkystation/Objects/Materials/Sheets/glass.rsi #Funky resprite
     state: glass_3
   product: CrateMaterialGlass
   cost: 1500
