@@ -1,5 +1,4 @@
 - type: entity
-  abstract: true
   parent: BaseThiefObjective
   id: ScoreThiefObjective
   components:
