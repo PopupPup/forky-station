@@ -85,12 +85,12 @@ public sealed partial class ScoreThiefConditionSystem : EntitySystem
         _metaData.SetEntityName(condition.Owner,
             Loc.GetString("scorethief-objective-title-one") + condition.Comp.TargetScore + Loc.GetString("scorethief-objective-title-two"),
             args.Meta);
-        _metaData.SetEntityDescription(condition.Owner, condition.Comp.CurrentScore + "/" + condition.Comp.TargetScore, args.Meta);
         _objectives.SetIcon(condition.Owner, sprite, args.Objective);
     }
 
     private void OnGetProgress(Entity<ScoreThiefConditionComponent> condition, ref ObjectiveGetProgressEvent args)
     {
+        _metaData.SetEntityDescription(condition.Owner, (int)((float)condition.Comp.CurrentScore/condition.Comp.TargetScore*100) + "%");
         if (!_containerQuery.TryGetComponent(args.MindId, out var currentManager))
             return;
 
