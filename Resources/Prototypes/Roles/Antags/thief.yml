@@ -22,6 +22,9 @@
   - type: Thieving
     stripTimeReduction: 2
     stealthy: true
+  - type: InnateAppraisal
+    blackMarket: True
+    precise: False
   mindRoles:
   - MindRoleThief
   briefing:

@@ -1,8 +1,10 @@
 using Content.Server._Funkystation.Objectives.Components;
 using Content.Server.Cargo.Systems;
 using Content.Shared.Interaction;
+using Content.Shared.Mind.Components;
 using Content.Shared.Objectives.Components;
 using Content.Shared.Objectives.Systems;
+using JetBrains.Annotations;
 using Robust.Shared.Containers;
 using Robust.Shared.Random;
 using Robust.Shared.Utility;
@@ -13,6 +15,7 @@ namespace Content.Server._Funkystation.Objectives.Systems;
 /// The objective system for scorethief
 /// </summary>
 // Large portions of this were taken from https://github.com/funky-station/forky-station/blob/22a547c7c8aa1f0f6ac5f8c3e9941f2dfc25bd17/Content.Server/Objectives/Systems/StealConditionSystem.cs
+[UsedImplicitly]
 public sealed partial class ScoreThiefConditionSystem : EntitySystem
 {
     [Dependency] private IRobustRandom _random = default!;
@@ -22,8 +25,10 @@ public sealed partial class ScoreThiefConditionSystem : EntitySystem
     [Dependency] private SharedInteractionSystem _interaction = default!;
     [Dependency] private IEntityManager _entManager = default!;
     [Dependency] private EntityQuery<ContainerManagerComponent> _containerQuery = default!;
+    [Dependency] private EntityQuery<ScoreThiefPriceModifierComponent> _modifierQuery = default!;
+    [Dependency] private EntityQuery<MindContainerComponent> _mindQuery = default!;
 
-    public override void Initialize()
+   public override void Initialize()
     {
         base.Initialize();
 
@@ -83,19 +88,16 @@ public sealed partial class ScoreThiefConditionSystem : EntitySystem
         var sprite = new SpriteSpecifier.Rsi(new ResPath("/Textures/Objects/Economy/cash.rsi"), rsiState);
 
         _metaData.SetEntityName(condition.Owner,
-            Loc.GetString("scorethief-objective-title-one") + condition.Comp.TargetScore + Loc.GetString("scorethief-objective-title-two"),
+            Loc.GetString("scorethief-objective-title-one") + " " + condition.Comp.TargetScore + " " + Loc.GetString("scorethief-objective-title-two"),
             args.Meta);
         _objectives.SetIcon(condition.Owner, sprite, args.Objective);
     }
 
     private void OnGetProgress(Entity<ScoreThiefConditionComponent> condition, ref ObjectiveGetProgressEvent args)
     {
-        _metaData.SetEntityDescription(condition.Owner, (int)((float)condition.Comp.CurrentScore/condition.Comp.TargetScore*100) + "%");
-        if (!_containerQuery.TryGetComponent(args.MindId, out var currentManager))
+        if (!_containerQuery.TryGetComponent(args.Mind.CurrentEntity, out var currentManager))
             return;
 
-        var containerStack = new Stack<ContainerManagerComponent>();
-        var priceSystem = _entManager.System<PricingSystem>();
         condition.Comp.CurrentScore = 0;
 
         // Check steal areas
@@ -115,36 +117,65 @@ public sealed partial class ScoreThiefConditionSystem : EntitySystem
                     if (!_interaction.InRangeUnobstructed((uid, xform), (ent, ent.Comp), range: area.Range))
                         continue;
 
-                    //TODO: use ScoreThiefPriceModifierComponent
-                    condition.Comp.CurrentScore += (int)priceSystem.GetPrice(ent, false);
-
-                    //If it's a container, check it later
-                    if (_containerQuery.TryGetComponent(ent, out var containerManager))
-                    {
-                        containerStack.Push(containerManager);
-                    }
+                    condition.Comp.CurrentScore += GetValue(ent, out _, out _);
                 }
             }
         }
 
+        args.Progress = Math.Clamp((float)condition.Comp.CurrentScore / condition.Comp.TargetScore, 0f, 1f);
+        _metaData.SetEntityDescription(condition.Owner, Math.Clamp((int)((float)condition.Comp.CurrentScore/condition.Comp.TargetScore*100), 0, 100) + "%");
+    }
+
+    /// Get the price of an item (not including contained items) taking into account ScoreThiefPriceModifierComponent
+    public int GetValue(EntityUid entity, out bool alive, out string? reason)
+    {
+        reason = null;
+        alive = false;
+        var priceSystem = _entManager.System<PricingSystem>();
+        double multiplier = 1;
+        if (_modifierQuery.TryGetComponent(entity, out var modifier))
+        {
+            multiplier = modifier.Multiplier;
+            reason = Loc.GetString(modifier.Reason);
+        }
+        else if (_mindQuery.TryGetComponent(entity, out _))
+        {
+            multiplier = 0;
+            alive = true;
+            reason = Loc.GetString("scorethief-modifier-alive");
+        }
+        var price = (int)(priceSystem.GetPrice(entity, false)*multiplier);
+        //If it's a container and not alive, check it
+        if (_containerQuery.TryGetComponent(entity, out var containerManager) && !alive)
+        {
+            price += GetValueRecursive(containerManager);
+        }
+
+        return price;
+    }
+
+    private int GetValueRecursive(ContainerManagerComponent? currentManager)
+    {
+        if (currentManager == null)
+            return 0;
+        var value = 0;
+        var containerStack = new Stack<ContainerManagerComponent>();
         // recursively check each container
         // checks inventory, bag, implants, etc.
-        //TODO: use ScoreThiefPriceModifierComponent
         do
         {
             foreach (var container in currentManager.Containers.Values)
             {
                 foreach (var entity in container.ContainedEntities)
                 {
-                    condition.Comp.CurrentScore += (int)priceSystem.GetPrice(entity, false);
+                    value += GetValue(entity, out var alive, out _);
 
-                    // if it's a container check its contents
-                    if (_containerQuery.TryGetComponent(entity, out var containerManager))
+                    // if it's a container and not alive check its contents
+                    if (_containerQuery.TryGetComponent(entity, out var containerManager) && !alive)
                         containerStack.Push(containerManager);
                 }
             }
         } while (containerStack.TryPop(out currentManager));
-
-        args.Progress = Math.Clamp((float)condition.Comp.CurrentScore / condition.Comp.TargetScore, 0f, 1f);
+        return value;
     }
 }

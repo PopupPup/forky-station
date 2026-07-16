@@ -1,0 +1,10 @@
+scorethief-objective-title-one = Steal
+scorethief-objective-title-two = worth of spesos of items
+scorethief-inspect-one = This is worth
+scorethief-inspect-two = spesos.
+scorethief-appraise = Estimate the price of the item
+scorethief-modifier-alive = Living things are too hard to transport to be worth it and dead things spoil.
+scorethief-modifier-id = Basic ID cards are too traceable to be worth anything.
+scorethief-modifier-cap-id = Certain people are willing to pay a lot for all-access on a Nanotrasen station.
+scorethief-modifier-hop-id = Certain people are willing to pay a lot for near all-access on a Nanotrasen station.
+scorethief-modifier-critical-infrastructure = Critical station infrastructure is too high profile and easily traceable to be worth anything.

@@ -143,6 +143,11 @@
     guides:
     - NuclearReactor
     - Power
+  # Funky changes begin
+  - type: ScoreThiefPriceModifier
+    reason: "scorethief-modifier-critical-infrastructure"
+    multiplier: 0
+  # Funky changes end
 
 # Crew nuclear reactors
 - type: entity
