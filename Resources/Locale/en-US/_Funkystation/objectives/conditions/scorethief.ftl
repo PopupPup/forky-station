@@ -12,3 +12,14 @@ scorethief-modifier-centcomm-comms = Certain people are willing to pay a lot to 
 scorethief-modifier-command-comms = Certain people are willing to pay a lot for command comms.
 scorethief-modifier-sec-comms = Certain people are willing to pay for security comms.
 scorethief-modifier-critical-infrastructure = Critical station infrastructure is too high profile and easily traceable to be worth anything.
+
+scorethief-role-greeting-human =
+    You are criminal scum, a professional thief previously arrested and on parole for grand theft. You are back to steal again.
+    You were forcibly given a pacifism implant after your last arrest, but that won't stop you from getting meeting the market's demands.
+
+scorethief-role-greeting-animal =
+    You are a kleptomaniac animal.
+    Steal things that you like.
+
+scorethief-role-greeting-equipment =
+    You have a satchel of thieves' tools and possess the innate ability to steal without notice. Choose your starting equipment, and do your work stealthily.
