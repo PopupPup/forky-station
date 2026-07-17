@@ -79,7 +79,7 @@
   # Funky changes start
   - type: ScoreThiefPriceModifier
     reason: "scorethief-modifier-cap-id"
-    multiplier: 1000
+    multiplier: 500
   # Funky changes end
 
 - type: entity
@@ -104,7 +104,7 @@
   # Funky changes start
   - type: ScoreThiefPriceModifier
     reason: "scorethief-modifier-hop-id"
-    multiplier: 800
+    multiplier: 400
   # Funky changes end
 
 - type: entity

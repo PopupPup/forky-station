@@ -95,7 +95,7 @@
   # Funky changes start
   - type: ScoreThiefPriceModifier
     reason: "scorethief-modifier-command-comms"
-    multiplier: 1200
+    multiplier: 400
   # Funky changes end
 
 - type: entity
@@ -118,7 +118,7 @@
   # Funky changes start
   - type: ScoreThiefPriceModifier
     reason: "scorethief-modifier-command-comms"
-    multiplier: 1000
+    multiplier: 200
   # Funky changes end
 
 - type: entity
