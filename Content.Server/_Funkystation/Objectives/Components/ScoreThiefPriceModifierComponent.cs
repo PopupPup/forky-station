@@ -12,8 +12,8 @@ public sealed partial class ScoreThiefPriceModifierComponent : Component
     /// <summary>
     /// Must be a Loc string
     /// </summary>
-    [DataField(required: true)]
-    public string Reason;
+    [DataField]
+    public string? Reason = null;
 
     [DataField(required: true)]
     public double Multiplier;

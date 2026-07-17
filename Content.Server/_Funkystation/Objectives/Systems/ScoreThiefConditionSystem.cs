@@ -95,10 +95,8 @@ public sealed partial class ScoreThiefConditionSystem : EntitySystem
 
     private void OnGetProgress(Entity<ScoreThiefConditionComponent> condition, ref ObjectiveGetProgressEvent args)
     {
-        if (!_containerQuery.TryGetComponent(args.Mind.CurrentEntity, out var currentManager))
-            return;
-
         condition.Comp.CurrentScore = 0;
+        var checkPlayer = true;
 
         // Check steal areas
         if (condition.Comp.CheckStealAreas)
@@ -117,9 +115,19 @@ public sealed partial class ScoreThiefConditionSystem : EntitySystem
                     if (!_interaction.InRangeUnobstructed((uid, xform), (ent, ent.Comp), range: area.Range))
                         continue;
 
-                    condition.Comp.CurrentScore += GetValue(ent, out _, out _);
+                    condition.Comp.CurrentScore += GetValue(ent, out _, area: true);
+                    if (ent == args.Mind.CurrentEntity)
+                    {
+                        checkPlayer = false;
+                    }
                 }
             }
+        }
+
+        // Check thief's inventory
+        if (args.Mind.CurrentEntity != null && checkPlayer)
+        {
+            condition.Comp.CurrentScore += GetValue(args.Mind.CurrentEntity.Value, out _, self: true);
         }
 
         args.Progress = Math.Clamp((float)condition.Comp.CurrentScore / condition.Comp.TargetScore, 0f, 1f);
@@ -127,55 +135,59 @@ public sealed partial class ScoreThiefConditionSystem : EntitySystem
     }
 
     /// Get the price of an item (not including contained items) taking into account ScoreThiefPriceModifierComponent
-    public int GetValue(EntityUid entity, out bool alive, out string? reason)
+    public int GetValue(EntityUid entity, out string? reason, bool area = false, bool self = false)
     {
         reason = null;
-        alive = false;
         var priceSystem = _entManager.System<PricingSystem>();
         double multiplier = 1;
         if (_modifierQuery.TryGetComponent(entity, out var modifier))
         {
             multiplier = modifier.Multiplier;
-            reason = Loc.GetString(modifier.Reason);
+            if (modifier.Reason != null)
+            {
+                reason = Loc.GetString(modifier.Reason);
+            }
         }
-        else if (_mindQuery.TryGetComponent(entity, out _))
+
+        if (_mindQuery.HasComp(entity))
         {
+            if (!self)
+            {
+                return 0;
+            }
             multiplier = 0;
-            alive = true;
-            reason = Loc.GetString("scorethief-modifier-alive");
         }
-        var price = (int)(priceSystem.GetPrice(entity, false)*multiplier);
-        //If it's a container and not alive, check it
-        if (_containerQuery.TryGetComponent(entity, out var containerManager) && !alive)
+
+        var price = 0;
+
+        price = (int)(priceSystem.GetPrice(entity, false)*multiplier);
+
+        if (_containerQuery.TryComp(entity, out var containerManager) && !area)
         {
-            price += GetValueRecursive(containerManager);
+            foreach (var container in containerManager.Containers.Values)
+            {
+                foreach (var ent in container.ContainedEntities)
+                {
+                    price += GetValue(ent, out _);
+                }
+            }
         }
 
         return price;
     }
 
-    private int GetValueRecursive(ContainerManagerComponent? currentManager)
+    private int GetValueRecursive(ContainerManagerComponent currentManager)
     {
-        if (currentManager == null)
-            return 0;
         var value = 0;
-        var containerStack = new Stack<ContainerManagerComponent>();
         // recursively check each container
         // checks inventory, bag, implants, etc.
-        do
+        foreach (var container in currentManager.Containers.Values)
         {
-            foreach (var container in currentManager.Containers.Values)
+            foreach (var entity in container.ContainedEntities)
             {
-                foreach (var entity in container.ContainedEntities)
-                {
-                    value += GetValue(entity, out var alive, out _);
-
-                    // if it's a container and not alive check its contents
-                    if (_containerQuery.TryGetComponent(entity, out var containerManager) && !alive)
-                        containerStack.Push(containerManager);
-                }
+                value += GetValue(entity, out _);
             }
-        } while (containerStack.TryPop(out currentManager));
+        }
         return value;
     }
 }
