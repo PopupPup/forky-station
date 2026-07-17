@@ -153,6 +153,7 @@ public sealed partial class ScoreThiefConditionSystem : EntitySystem
         {
             if (!self)
             {
+                reason = Loc.GetString("scorethief-modifier-alive");
                 return 0;
             }
             multiplier = 0;

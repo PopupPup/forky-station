@@ -42,7 +42,7 @@ public sealed partial class InnateAppraisalSystem : EntitySystem
                 string? reason = null;
                 if (comp.BlackMarket)
                 {
-                    //price = scoreThiefConditionSystem.GetValue(target, out reason);
+                    price = scoreThiefConditionSystem.GetValue(target, out reason);
                 }
                 else
                 {
