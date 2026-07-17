@@ -11,7 +11,4 @@ public sealed partial class InnateAppraisalComponent : Component
     // Use ScoreThiefPriceModifierComponent?
     [DataField]
     public bool BlackMarket = false;
-
-    [DataField]
-    public bool Precise = true;
 }
