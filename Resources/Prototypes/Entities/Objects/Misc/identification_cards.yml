@@ -104,7 +104,7 @@
   # Funky changes start
   - type: ScoreThiefPriceModifier
     reason: "scorethief-modifier-hop-id"
-    multiplier: 8000
+    multiplier: 800
   # Funky changes end
 
 - type: entity
