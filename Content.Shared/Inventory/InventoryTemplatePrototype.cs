@@ -1,6 +1,7 @@
 using System.Numerics;
 using Content.Shared.Strip;
 using Content.Shared.Whitelist;
+using Robust.Shared.Containers;
 using Robust.Shared.Prototypes;
 
 namespace Content.Shared.Inventory;
@@ -60,4 +61,12 @@ public sealed partial class SlotDefinition
     ///     Entity blacklist for CanEquip checks.
     /// </summary>
     [DataField("blacklist")] public EntityWhitelist? Blacklist = null;
+
+    // FUNKY CHANGES START
+    [DataField("drop")]
+    public bool Drop = true;
+
+    [DataField("container")]
+    public ContainerSlot? Container;
+    // FUNKY CHANGES END
 }

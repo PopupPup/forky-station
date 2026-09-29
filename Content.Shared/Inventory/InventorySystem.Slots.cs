@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Content.Shared._Funkystation.Inventory;
 using Content.Shared.DisplacementMap;
 using Content.Shared.Inventory.Events;
 using Content.Shared.Storage;
@@ -69,7 +70,7 @@ public partial class InventorySystem : EntitySystem
         targetComp.Displacements = new Dictionary<string, DisplacementData>(source.Comp.Displacements);
         targetComp.FemaleDisplacements = new Dictionary<string, DisplacementData>(source.Comp.FemaleDisplacements);
         targetComp.MaleDisplacements = new Dictionary<string, DisplacementData>(source.Comp.MaleDisplacements);
-        SetTemplateId((target, targetComp), source.Comp.TemplateId);
+        //SetTemplateId((target, targetComp), source.Comp.TemplateId); FUNKY CHANGE
         Dirty(target, targetComp);
     }
 
@@ -83,32 +84,52 @@ public partial class InventorySystem : EntitySystem
         UpdateInventoryTemplate(ent);
     }
 
+    // METHOD REDONE ON FUNKY
     protected virtual void UpdateInventoryTemplate(Entity<InventoryComponent> ent)
     {
-        if (!ProtoMan.Resolve(ent.Comp.TemplateId, out var invTemplate))
-            return;
-
-        // Remove any containers that aren't in the new template.
-        foreach (var container in ent.Comp.Containers)
+        var invTemplates = new List<InventoryTemplatePrototype>();
+        var allSlots = new List<SlotDefinition>();
+        for (int i = 0; i < ent.Comp.TemplateId.Length; i++)
         {
-            if (invTemplate.Slots.Any(s => s.Name == container.ID))
-                continue;
-
-            // Empty container before deletion so the contents don't get deleted.
-            // For cases when we update the template while items are already worn.
-            _containerSystem.EmptyContainer(container);
-            _containerSystem.ShutdownContainer(container);
+            if (!ProtoMan.Resolve(ent.Comp.TemplateId[i], out var invTemplate))
+                return;
+            invTemplates.Add(invTemplate);
+            for (int j = 0; j < invTemplate.Slots.Length; j++)
+            {
+                allSlots.Add(invTemplate.Slots[j]);
+            }
         }
 
-        // Ensure the containers from the template.
-        ent.Comp.Slots = invTemplate.Slots;
-        ent.Comp.Containers = new ContainerSlot[ent.Comp.Slots.Length];
-        for (var i = 0; i < ent.Comp.Containers.Length; i++)
+        for (int i = 0; i < allSlots.Count; i++)
         {
-            var slot = ent.Comp.Slots[i];
-            var container = _containerSystem.EnsureContainer<ContainerSlot>(ent.Owner, slot.Name);
-            container.OccludesLight = false;
-            ent.Comp.Containers[i] = container;
+            // Remove any containers that aren't in the new template.
+            foreach (var container in ent.Comp.Containers)
+            {
+                if (allSlots.Any(s => s.Name == container.ID))
+                    continue;
+
+                if (allSlots[i].Drop)
+                {
+                    // Empty container before deletion so the contents don't get deleted.
+                    // For cases when we update the template while items are already worn.
+                    _containerSystem.EmptyContainer(container);
+                    _containerSystem.ShutdownContainer(container);
+                }
+            }
+        }
+
+        for (int i = 0; i < invTemplates.Count; i++)
+        {
+            // Ensure the containers from the template.
+            ent.Comp.Slots = invTemplates[i].Slots;
+            ent.Comp.Containers = new ContainerSlot[ent.Comp.Slots.Length];
+            for (var j = 0; j < ent.Comp.Containers.Length; j++)
+            {
+                var slot = ent.Comp.Slots[j];
+                var container = _containerSystem.EnsureContainer<ContainerSlot>(ent.Owner, slot.Name);
+                container.OccludesLight = false;
+                ent.Comp.Containers[j] = container;
+            }
         }
 
         var ev = new InventoryTemplateUpdated();
@@ -136,6 +157,14 @@ public partial class InventorySystem : EntitySystem
 
         if (!TryGetSlot(uid, slot, out slotDefinition, inventory: inventory))
             return false;
+
+        // FUNKY CHANGES START
+        if (slotDefinition.Container is not null)
+        {
+            containerSlot = slotDefinition.Container;
+            return true;
+        }
+        // FUNKY CHANGES END
 
         if (!_containerSystem.TryGetContainer(uid, slotDefinition.Name, out var container, containerComp))
         {
@@ -226,6 +255,7 @@ public partial class InventorySystem : EntitySystem
     /// </remarks>
     /// <param name="ent">The entity to update.</param>
     /// <param name="newTemplate">The ID of the new inventory template prototype.</param>
+    /* FUNKY CHANGE
     public void SetTemplateId(Entity<InventoryComponent> ent, ProtoId<InventoryTemplatePrototype> newTemplate)
     {
         if (ent.Comp.TemplateId == newTemplate)
@@ -234,7 +264,7 @@ public partial class InventorySystem : EntitySystem
         ent.Comp.TemplateId = newTemplate;
         UpdateInventoryTemplate(ent);
         Dirty(ent);
-    }
+    }*/
 
     /// <summary>
     /// Enumerator for iterating over an inventory's slot containers. Also has methods that skip empty containers.

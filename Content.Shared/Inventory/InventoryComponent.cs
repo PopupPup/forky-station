@@ -11,21 +11,22 @@ namespace Content.Shared.Inventory;
 public sealed partial class InventoryComponent : Component
 {
     /// <summary>
-    /// The template defining how the inventory layout will look like.
+    /// The templates defining how the inventory layout will look like.
     /// </summary>
     [DataField, AutoNetworkedField]
     [ViewVariables] // use the API method
-    public ProtoId<InventoryTemplatePrototype> TemplateId = "human";
+    public ProtoId<InventoryTemplatePrototype>[] TemplateId = {"human"}; // FUNKY CHANGE
 
     /// <summary>
     /// For setting the TemplateId.
     /// </summary>
-    [ViewVariables(VVAccess.ReadWrite)]
+    /* FUNKY CHANGE
+     [ViewVariables(VVAccess.ReadWrite)]
     public ProtoId<InventoryTemplatePrototype> TemplateIdVV
     {
         get => TemplateId;
         set => IoCManager.Resolve<IEntityManager>().System<InventorySystem>().SetTemplateId((Owner, this), value);
-    }
+    }*/
 
     [DataField, AutoNetworkedField]
     public string? SpeciesId;

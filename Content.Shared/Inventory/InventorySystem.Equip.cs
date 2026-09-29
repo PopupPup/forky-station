@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Content.Shared._Funkystation.Inventory;
 using Content.Shared.Armor;
 using Content.Shared.Clothing.Components;
 using Content.Shared.DoAfter;
@@ -34,6 +35,7 @@ public abstract partial class InventorySystem
     [Dependency] private SharedTransformSystem _transform = default!;
     [Dependency] private EntityWhitelistSystem _whitelistSystem = default!;
     [Dependency] private SharedStrippableSystem _strippable = default!;
+    [Dependency] private EntityQuery<EquipableInventoryComponent> _equipableInventoryQuery = default!; // FUNKY CHANGE
 
     private static readonly ProtoId<ItemSizePrototype> PocketableItemSize = "Small";
 
@@ -203,6 +205,14 @@ public abstract partial class InventorySystem
             TriggerHandContactInteraction(target);
 
         _movementSpeed.RefreshMovementSpeedModifiers(target);
+
+        // START FUNKY CHANGES
+        if (_equipableInventoryQuery.TryComp(target, out var comp))
+        {
+            // TODO
+            // RAISE EVENT ADD target
+        }
+        // END FUNKY CHANGES
 
         return true;
     }
@@ -539,6 +549,14 @@ public abstract partial class InventorySystem
             TriggerHandContactInteraction(target);
 
         _movementSpeed.RefreshMovementSpeedModifiers(target);
+
+        // START FUNKY CHANGES
+        if (_equipableInventoryQuery.TryComp(target, out var comp))
+        {
+            // TODO
+            // RAISE EVENT REMOVE target
+        }
+        // END FUNKY CHANGES
 
         return true;
     }
