@@ -255,16 +255,18 @@ public partial class InventorySystem : EntitySystem
     /// </remarks>
     /// <param name="ent">The entity to update.</param>
     /// <param name="newTemplate">The ID of the new inventory template prototype.</param>
-    /* FUNKY CHANGE
     public void SetTemplateId(Entity<InventoryComponent> ent, ProtoId<InventoryTemplatePrototype> newTemplate)
     {
-        if (ent.Comp.TemplateId == newTemplate)
+        // FUNKY CHANGES START
+        ProtoId<InventoryTemplatePrototype>[] array = [newTemplate];
+        if (ent.Comp.TemplateId == array)
             return;
 
-        ent.Comp.TemplateId = newTemplate;
+        ent.Comp.TemplateId = array;
+        // FUNKY CHANGES END
         UpdateInventoryTemplate(ent);
         Dirty(ent);
-    }*/
+    }
 
     /// <summary>
     /// Enumerator for iterating over an inventory's slot containers. Also has methods that skip empty containers.
