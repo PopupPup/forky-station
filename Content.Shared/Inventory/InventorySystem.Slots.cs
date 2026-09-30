@@ -33,6 +33,24 @@ public partial class InventorySystem : EntitySystem
             Array.Resize(ref ent.Comp.TemplateId, ent.Comp.TemplateId.Length + 1);
             ent.Comp.TemplateId[^1] = args.Inventory.TemplateId;
         }
+        else
+        {
+            var newTemplateId = new List<ProtoId<InventoryTemplatePrototype>>();
+            var removed = false;
+            for (int i = 0; i < ent.Comp.TemplateId.Length; i++)
+            {
+                if (ent.Comp.TemplateId[i] != args.Inventory.TemplateId || removed)
+                {
+                    newTemplateId.Add(ent.Comp.TemplateId[i]);
+                }
+                else
+                {
+                    removed = true;
+                }
+
+                ent.Comp.TemplateId = newTemplateId.ToArray();
+            }
+        }
         UpdateInventoryTemplate(ent);
     }
 
@@ -133,18 +151,16 @@ public partial class InventorySystem : EntitySystem
             }
         }
 
-        for (int i = 0; i < invTemplates.Count; i++)
+
+        // Ensure the containers from the template.
+        ent.Comp.Slots = allSlots.ToArray();
+        ent.Comp.Containers = new ContainerSlot[ent.Comp.Slots.Length];
+        for (var j = 0; j < ent.Comp.Containers.Length; j++)
         {
-            // Ensure the containers from the template.
-            ent.Comp.Slots = invTemplates[i].Slots;
-            ent.Comp.Containers = new ContainerSlot[ent.Comp.Slots.Length];
-            for (var j = 0; j < ent.Comp.Containers.Length; j++)
-            {
-                var slot = ent.Comp.Slots[j];
-                var container = _containerSystem.EnsureContainer<ContainerSlot>(ent.Owner, slot.Name);
-                container.OccludesLight = false;
-                ent.Comp.Containers[j] = container;
-            }
+            var slot = ent.Comp.Slots[j];
+            var container = _containerSystem.EnsureContainer<ContainerSlot>(ent.Owner, slot.Name);
+            container.OccludesLight = false;
+            ent.Comp.Containers[j] = container;
         }
 
         var ev = new InventoryTemplateUpdated();
@@ -184,7 +200,8 @@ public partial class InventorySystem : EntitySystem
         if (!_containerSystem.TryGetContainer(uid, slotDefinition.Name, out var container, containerComp))
         {
             if (inventory.LifeStage >= ComponentLifeStage.Initialized)
-                Log.Error($"Missing inventory container {slot} on entity {ToPrettyString(uid)}");
+                // FUNKY CHANGE: People will regularly not have certain slots now when naked. This is no longer an error, but expected.
+                //Log.Error($"Missing inventory container {slot} on entity {ToPrettyString(uid)}");
             return false;
         }
 
