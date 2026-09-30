@@ -207,10 +207,10 @@ public abstract partial class InventorySystem
         _movementSpeed.RefreshMovementSpeedModifiers(target);
 
         // START FUNKY CHANGES
-        if (_equipableInventoryQuery.TryComp(target, out var comp))
+        if (_equipableInventoryQuery.TryComp(itemUid, out var comp))
         {
-            // TODO
-            // RAISE EVENT ADD target
+            var changeEvent = new EquipableInventoryChangeEvent(true, comp);
+            RaiseLocalEvent(target, changeEvent, false);
         }
         // END FUNKY CHANGES
 
@@ -551,10 +551,10 @@ public abstract partial class InventorySystem
         _movementSpeed.RefreshMovementSpeedModifiers(target);
 
         // START FUNKY CHANGES
-        if (_equipableInventoryQuery.TryComp(target, out var comp))
+        if (_equipableInventoryQuery.TryComp(removedItem, out var comp))
         {
-            // TODO
-            // RAISE EVENT REMOVE target
+            var changeEvent = new EquipableInventoryChangeEvent(false, comp);
+            RaiseLocalEvent(target, changeEvent, false);
         }
         // END FUNKY CHANGES
 

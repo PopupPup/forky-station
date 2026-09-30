@@ -23,6 +23,17 @@ public partial class InventorySystem : EntitySystem
             .AddHandler(HandleViewVariablesSlots, ListViewVariablesSlots);
 
         SubscribeLocalEvent<InventoryComponent, AfterAutoHandleStateEvent>(AfterAutoState);
+        SubscribeLocalEvent<InventoryComponent, EquipableInventoryChangeEvent>(EquipableInventoryChange);
+    }
+
+    private void EquipableInventoryChange(Entity<InventoryComponent> ent, ref EquipableInventoryChangeEvent args)
+    {
+        if (args.Add)
+        {
+            Array.Resize(ref ent.Comp.TemplateId, ent.Comp.TemplateId.Length + 1);
+            ent.Comp.TemplateId[^1] = args.Inventory.TemplateId;
+        }
+        UpdateInventoryTemplate(ent);
     }
 
     private void ShutdownSlots()
@@ -108,12 +119,16 @@ public partial class InventorySystem : EntitySystem
                 if (allSlots.Any(s => s.Name == container.ID))
                     continue;
 
-                if (allSlots[i].Drop)
+                if (allSlots[i].Container is null)
                 {
                     // Empty container before deletion so the contents don't get deleted.
                     // For cases when we update the template while items are already worn.
                     _containerSystem.EmptyContainer(container);
                     _containerSystem.ShutdownContainer(container);
+                }
+                else if (allSlots[i].Drop)
+                {
+                    _containerSystem.EmptyContainer(container);
                 }
             }
         }
