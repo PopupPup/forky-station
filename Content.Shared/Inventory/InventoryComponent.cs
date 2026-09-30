@@ -10,6 +10,7 @@ namespace Content.Shared.Inventory;
 [AutoGenerateComponentState(true)]
 public sealed partial class InventoryComponent : Component
 {
+
     /// <summary>
     /// The templates defining how the inventory layout will look like.
     /// </summary>

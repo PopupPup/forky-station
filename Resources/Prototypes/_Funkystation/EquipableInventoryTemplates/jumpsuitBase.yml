@@ -7,7 +7,7 @@
     slotFlags: POCKET
     slotGroup: MainHotbar
     stripTime: 3
-    uiWindowPos: 0,3
+    uiWindowPos: -2,3
     strippingWindowPos: 0,4
     dependsOn: jumpsuit
     displayName: Pocket 1
@@ -19,7 +19,7 @@
     slotFlags: POCKET
     slotGroup: MainHotbar
     stripTime: 3
-    uiWindowPos: 2,3
+    uiWindowPos: -1,3
     strippingWindowPos: 1,4
     dependsOn: jumpsuit
     displayName: Pocket 2
@@ -31,7 +31,7 @@
     slotFlags: IDCARD
     slotGroup: SecondHotbar
     stripTime: 6
-    uiWindowPos: 2,1
+    uiWindowPos: -1,1
     strippingWindowPos: 2,4
     dependsOn: jumpsuit
     displayName: ID
