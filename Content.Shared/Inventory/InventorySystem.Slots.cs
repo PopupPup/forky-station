@@ -37,7 +37,7 @@ public partial class InventorySystem : EntitySystem
         {
             var newTemplateId = new List<ProtoId<InventoryTemplatePrototype>>();
             var removed = false;
-            for (int i = 0; i < ent.Comp.TemplateId.Length; i++)
+            for (var i = 0; i < ent.Comp.TemplateId.Length; i++)
             {
                 if (ent.Comp.TemplateId[i] != args.Inventory.TemplateId || removed)
                 {
