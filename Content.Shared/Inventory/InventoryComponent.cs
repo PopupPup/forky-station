@@ -16,7 +16,9 @@ public sealed partial class InventoryComponent : Component
     /// </summary>
     [DataField, AutoNetworkedField]
     [ViewVariables] // use the API method
-    public ProtoId<InventoryTemplatePrototype>[] TemplateId = {"human"}; // FUNKY CHANGE
+    public ProtoId<InventoryTemplatePrototype>[] TemplateId = ["human"]; // FUNKY CHANGE
+
+    public EntityUid?[] Owners = [null]; // FUNKY CHANGE
 
     /// <summary>
     /// For setting the TemplateId.
@@ -34,10 +36,10 @@ public sealed partial class InventoryComponent : Component
 
 
     [ViewVariables]
-    public SlotDefinition[] Slots = Array.Empty<SlotDefinition>();
+    public SlotDefinition[] Slots = [];
 
     [ViewVariables]
-    public ContainerSlot[] Containers = Array.Empty<ContainerSlot>();
+    public ContainerSlot[] Containers = [];
 
     [DataField, AutoNetworkedField]
     public Dictionary<string, DisplacementData> Displacements = new();

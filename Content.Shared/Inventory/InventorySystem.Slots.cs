@@ -13,6 +13,7 @@ namespace Content.Shared.Inventory;
 public partial class InventorySystem : EntitySystem
 {
     [Dependency] private IViewVariablesManager _vvm = default!;
+    [Dependency] private EntityQuery<InventoryComponent> _inventoryComponent = default!; // FUNKY CHANGE
 
     private void InitializeSlots()
     {
@@ -23,7 +24,7 @@ public partial class InventorySystem : EntitySystem
             .AddHandler(HandleViewVariablesSlots, ListViewVariablesSlots);
 
         SubscribeLocalEvent<InventoryComponent, AfterAutoHandleStateEvent>(AfterAutoState);
-        SubscribeLocalEvent<InventoryComponent, EquipableInventoryChangeEvent>(EquipableInventoryChange);
+        SubscribeLocalEvent<InventoryComponent, EquipableInventoryChangeEvent>(EquipableInventoryChange); // FUNKY CHANGE
     }
 
     private void EquipableInventoryChange(Entity<InventoryComponent> ent, ref EquipableInventoryChangeEvent args)
@@ -31,17 +32,21 @@ public partial class InventorySystem : EntitySystem
         if (args.Add)
         {
             Array.Resize(ref ent.Comp.TemplateId, ent.Comp.TemplateId.Length + 1);
+            Array.Resize(ref ent.Comp.Owners, ent.Comp.Owners.Length + 1);
             ent.Comp.TemplateId[^1] = args.Inventory.TemplateId;
+            ent.Comp.Owners[^1] = args.Inventory.Owner;
         }
         else
         {
             var newTemplateId = new List<ProtoId<InventoryTemplatePrototype>>();
+            var newOwners = new List<EntityUid?>();
             var removed = false;
             for (var i = 0; i < ent.Comp.TemplateId.Length; i++)
             {
                 if (ent.Comp.TemplateId[i] != args.Inventory.TemplateId || removed)
                 {
                     newTemplateId.Add(ent.Comp.TemplateId[i]);
+                    newOwners.Add(ent.Comp.Owners[i]);
                 }
                 else
                 {
@@ -49,6 +54,7 @@ public partial class InventorySystem : EntitySystem
                 }
 
                 ent.Comp.TemplateId = newTemplateId.ToArray();
+                ent.Comp.Owners = newOwners.ToArray();
             }
         }
         UpdateInventoryTemplate(ent);
@@ -118,6 +124,7 @@ public partial class InventorySystem : EntitySystem
     {
         var invTemplates = new List<InventoryTemplatePrototype>();
         var allSlots = new List<SlotDefinition>();
+        var invOwners = new List<EntityUid?>();
         for (int i = 0; i < ent.Comp.TemplateId.Length; i++)
         {
             if (!ProtoMan.Resolve(ent.Comp.TemplateId[i], out var invTemplate))
@@ -126,6 +133,7 @@ public partial class InventorySystem : EntitySystem
             for (int j = 0; j < invTemplate.Slots.Length; j++)
             {
                 allSlots.Add(invTemplate.Slots[j]);
+                invOwners.Add(ent.Comp.Owners[i]);
             }
         }
 
@@ -137,20 +145,15 @@ public partial class InventorySystem : EntitySystem
                 if (allSlots.Any(s => s.Name == container.ID))
                     continue;
 
-                if (allSlots[i].Container is null)
+                if (allSlots[i].Drop || invOwners[i] is null)
                 {
                     // Empty container before deletion so the contents don't get deleted.
                     // For cases when we update the template while items are already worn.
                     _containerSystem.EmptyContainer(container);
                     _containerSystem.ShutdownContainer(container);
                 }
-                else if (allSlots[i].Drop)
-                {
-                    _containerSystem.EmptyContainer(container);
-                }
             }
         }
-
 
         // Ensure the containers from the template.
         ent.Comp.Slots = allSlots.ToArray();
@@ -158,7 +161,7 @@ public partial class InventorySystem : EntitySystem
         for (var j = 0; j < ent.Comp.Containers.Length; j++)
         {
             var slot = ent.Comp.Slots[j];
-            var container = _containerSystem.EnsureContainer<ContainerSlot>(ent.Owner, slot.Name);
+            var container = _containerSystem.EnsureContainer<ContainerSlot>(invOwners[j]?? ent.Owner, slot.Name);
             container.OccludesLight = false;
             ent.Comp.Containers[j] = container;
         }
@@ -189,20 +192,27 @@ public partial class InventorySystem : EntitySystem
         if (!TryGetSlot(uid, slot, out slotDefinition, inventory: inventory))
             return false;
 
-        // FUNKY CHANGES START
-        if (slotDefinition.Container is not null)
-        {
-            containerSlot = slotDefinition.Container;
-            return true;
-        }
-        // FUNKY CHANGES END
-
         if (!_containerSystem.TryGetContainer(uid, slotDefinition.Name, out var container, containerComp))
         {
-            if (inventory.LifeStage >= ComponentLifeStage.Initialized)
-                // FUNKY CHANGE: People will regularly not have certain slots now when naked. This is no longer an error, but expected.
+            // FUNKY CHANGE: People will regularly not have certain slots now when naked. This is no longer an error, but expected.
+            //if (inventory.LifeStage >= ComponentLifeStage.Initialized)
                 //Log.Error($"Missing inventory container {slot} on entity {ToPrettyString(uid)}");
-            return false;
+            // START FUNKY CHANGES
+            if (!_inventoryComponent.TryGetComponent(uid, out var comp))
+            {
+                return false;
+            }
+
+            for (var i = 0; i < comp.Containers.Length; i++)
+            {
+                if (comp.Containers[i].ID == slotDefinition.Name)
+                {
+                    containerSlot = comp.Containers[i];
+                    slotDefinition = comp.Slots[i];
+                    return true;
+                }
+            }
+            // END FUNKY CHANGES
         }
 
         if (container is not ContainerSlot containerSlotChecked)

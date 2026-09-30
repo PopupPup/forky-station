@@ -76,8 +76,5 @@ public sealed partial class SlotDefinition : IComparable // IComparable added on
     // FUNKY CHANGES START
     [DataField("drop")]
     public bool Drop = true;
-
-    [DataField("container")]
-    public ContainerSlot? Container;
     // FUNKY CHANGES END
 }

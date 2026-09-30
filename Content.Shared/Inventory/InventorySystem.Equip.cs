@@ -211,6 +211,7 @@ public abstract partial class InventorySystem
         {
             var changeEvent = new EquipableInventoryChangeEvent(true, comp);
             RaiseLocalEvent(target, changeEvent, false);
+            RaiseLocalEvent(itemUid, changeEvent, false);
         }
         // END FUNKY CHANGES
 

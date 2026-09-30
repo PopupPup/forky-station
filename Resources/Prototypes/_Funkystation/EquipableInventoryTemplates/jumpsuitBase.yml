@@ -9,7 +9,6 @@
     stripTime: 3
     uiWindowPos: -2,3
     strippingWindowPos: 0,4
-    dependsOn: jumpsuit
     displayName: Pocket 1
     stripHidden: true
     drop: false
@@ -21,7 +20,6 @@
     stripTime: 3
     uiWindowPos: -1,3
     strippingWindowPos: 1,4
-    dependsOn: jumpsuit
     displayName: Pocket 2
     stripHidden: true
     drop: false
@@ -33,6 +31,5 @@
     stripTime: 6
     uiWindowPos: -1,1
     strippingWindowPos: 2,4
-    dependsOn: jumpsuit
     displayName: ID
     drop: false
