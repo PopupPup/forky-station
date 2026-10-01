@@ -137,22 +137,18 @@ public partial class InventorySystem : EntitySystem
             }
         }
 
-        for (int i = 0; i < allSlots.Count; i++)
+        var k = 0;
+        // Remove any containers that aren't in the new template.
+        foreach (var container in ent.Comp.Containers)
         {
-            // Remove any containers that aren't in the new template.
-            foreach (var container in ent.Comp.Containers)
-            {
-                if (allSlots.Any(s => s.Name == container.ID))
-                    continue;
+            if (allSlots.Any(s => s.Name == container.ID))
+                continue;
 
-                if (allSlots[i].Drop || invOwners[i] is null)
-                {
-                    // Empty container before deletion so the contents don't get deleted.
-                    // For cases when we update the template while items are already worn.
-                    _containerSystem.EmptyContainer(container);
-                    _containerSystem.ShutdownContainer(container);
-                }
+            if (ent.Comp.Slots[k].Drop)
+            {
+                _containerSystem.EmptyContainer(container);
             }
+            k++;
         }
 
         // Ensure the containers from the template.

@@ -74,7 +74,6 @@ public sealed partial class SlotDefinition : IComparable // IComparable added on
     [DataField("blacklist")] public EntityWhitelist? Blacklist = null;
 
     // FUNKY CHANGES START
-    [DataField("drop")]
-    public bool Drop = true;
+    [DataField("drop")] public bool Drop;
     // FUNKY CHANGES END
 }
