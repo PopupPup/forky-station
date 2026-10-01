@@ -15,7 +15,7 @@ public sealed partial class InventoryTemplatePrototype : IPrototype
 }
 
 [DataDefinition]
-public sealed partial class SlotDefinition : IComparable // IComparable added on Funky
+public sealed partial class SlotDefinition : IComparable // IComparable added by Funky
 {
     // START FUNKY CHANGES
     public int CompareTo(object? obj)

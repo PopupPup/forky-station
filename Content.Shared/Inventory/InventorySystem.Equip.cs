@@ -195,6 +195,9 @@ public abstract partial class InventorySystem
             return false;
         }
 
+        var equippedEvent = new DidEquipEvent(target, itemUid, slotDefinition);
+        RaiseLocalEvent(target, equippedEvent, true);
+
         if (!silent && clothing != null)
         {
             _audio.PlayPredicted(clothing.EquipSound, target, actor);
@@ -232,6 +235,24 @@ public abstract partial class InventorySystem
         // Can the actor reach the item?
         if (_interactionSystem.InRangeAndAccessible(actor, itemUid))
             return true;
+
+        // START FUNKY CHANGES
+        if (!_inventoryComponent.TryGetComponent(target, out var comp))
+        {
+            return false;
+        }
+
+        for (var index = 0; index < comp.Containers.Length; index++)
+        {
+            var t = comp.Containers[index];
+            if (t.ContainedEntities.Count > 0 && t.ContainedEntities[0] == itemUid)
+            {
+                var unequippedEvent = new DidUnequipEvent(target, itemUid, comp.Slots[index]);
+                RaiseLocalEvent(target, unequippedEvent, true);
+                return true;
+            }
+        }
+        // END FUNKY CHANGES
 
         // Is the actor currently stripping the target? Here we could check if the actor has the stripping UI open, but
         // that requires server/client specific code.
