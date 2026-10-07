@@ -7,7 +7,7 @@ namespace Content.Shared.Inventory;
 
 [RegisterComponent, NetworkedComponent]
 [Access(typeof(InventorySystem))]
-[AutoGenerateComponentState(true)]
+[AutoGenerateComponentState(true, true)] // FUNKY CHANGE
 public sealed partial class InventoryComponent : Component
 {
 

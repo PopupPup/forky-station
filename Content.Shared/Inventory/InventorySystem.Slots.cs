@@ -23,40 +23,6 @@ public partial class InventorySystem : EntitySystem
             .AddHandler(HandleViewVariablesSlots, ListViewVariablesSlots);
 
         SubscribeLocalEvent<InventoryComponent, AfterAutoHandleStateEvent>(AfterAutoState);
-        SubscribeLocalEvent<InventoryComponent, EquipableInventoryChangeEvent>(EquipableInventoryChange); // FUNKY CHANGE
-    }
-
-    private void EquipableInventoryChange(Entity<InventoryComponent> ent, ref EquipableInventoryChangeEvent args)
-    {
-        if (args.Add)
-        {
-            Array.Resize(ref ent.Comp.TemplateId, ent.Comp.TemplateId.Length + 1);
-            Array.Resize(ref ent.Comp.Owners, ent.Comp.Owners.Length + 1);
-            ent.Comp.TemplateId[^1] = args.Inventory.TemplateId;
-            ent.Comp.Owners[^1] = args.Inventory.Owner;
-        }
-        else
-        {
-            var newTemplateId = new List<ProtoId<InventoryTemplatePrototype>>();
-            var newOwners = new List<EntityUid?>();
-            var removed = false;
-            for (var i = 0; i < ent.Comp.TemplateId.Length; i++)
-            {
-                if (ent.Comp.TemplateId[i] != args.Inventory.TemplateId || removed)
-                {
-                    newTemplateId.Add(ent.Comp.TemplateId[i]);
-                    newOwners.Add(ent.Comp.Owners[i]);
-                }
-                else
-                {
-                    removed = true;
-                }
-
-                ent.Comp.TemplateId = newTemplateId.ToArray();
-                ent.Comp.Owners = newOwners.ToArray();
-            }
-        }
-        UpdateInventoryTemplate(ent);
     }
 
     private void ShutdownSlots()
@@ -121,15 +87,13 @@ public partial class InventorySystem : EntitySystem
     // METHOD REDONE ON FUNKY
     protected virtual void UpdateInventoryTemplate(Entity<InventoryComponent> ent)
     {
-        var invTemplates = new List<InventoryTemplatePrototype>();
         var allSlots = new List<SlotDefinition>();
         var invOwners = new List<EntityUid?>();
-        for (int i = 0; i < ent.Comp.TemplateId.Length; i++)
+        for (var i = 0; i < ent.Comp.TemplateId.Length; i++)
         {
             if (!ProtoMan.Resolve(ent.Comp.TemplateId[i], out var invTemplate))
                 return;
-            invTemplates.Add(invTemplate);
-            for (int j = 0; j < invTemplate.Slots.Length; j++)
+            for (var j = 0; j < invTemplate.Slots.Length; j++)
             {
                 allSlots.Add(invTemplate.Slots[j]);
                 invOwners.Add(ent.Comp.Owners[i]);
