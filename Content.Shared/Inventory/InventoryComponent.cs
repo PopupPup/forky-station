@@ -7,7 +7,7 @@ namespace Content.Shared.Inventory;
 
 [RegisterComponent, NetworkedComponent]
 [Access(typeof(InventorySystem))]
-[AutoGenerateComponentState(true)]
+[AutoGenerateComponentState(true, true)] // FUNKY CHANGE
 public sealed partial class InventoryComponent : Component
 {
 
@@ -18,7 +18,11 @@ public sealed partial class InventoryComponent : Component
     [ViewVariables] // use the API method
     public ProtoId<InventoryTemplatePrototype>[] TemplateId = ["human"]; // FUNKY CHANGE
 
-    public EntityUid?[] Owners = [null]; // FUNKY CHANGE
+    // FUNKY: god. GOD. I need to rewrite the whole damn inventory system at this point. Damnit. It works. At least. #killeveryone
+    [AutoNetworkedField] // FUNKY CHANGE
+    public List<EntityUid> Owners = new List<EntityUid>([EntityUid.Invalid]); // FUNKY CHANGE.
+    // Invalid = it's owned by the player. We do this because nullable EntityUid collections aren't automatically networked :P
+
 
     /// <summary>
     /// For setting the TemplateId.

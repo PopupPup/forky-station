@@ -31,14 +31,13 @@ public partial class InventorySystem : EntitySystem
         if (args.Add)
         {
             Array.Resize(ref ent.Comp.TemplateId, ent.Comp.TemplateId.Length + 1);
-            Array.Resize(ref ent.Comp.Owners, ent.Comp.Owners.Length + 1);
             ent.Comp.TemplateId[^1] = args.Inventory.TemplateId;
-            ent.Comp.Owners[^1] = args.Inventory.Owner;
+            ent.Comp.Owners.Add(args.Inventory.Owner);
         }
         else
         {
             var newTemplateId = new List<ProtoId<InventoryTemplatePrototype>>();
-            var newOwners = new List<EntityUid?>();
+            var newOwners = new List<EntityUid>();
             var removed = false;
             for (var i = 0; i < ent.Comp.TemplateId.Length; i++)
             {
@@ -53,10 +52,11 @@ public partial class InventorySystem : EntitySystem
                 }
 
                 ent.Comp.TemplateId = newTemplateId.ToArray();
-                ent.Comp.Owners = newOwners.ToArray();
+                ent.Comp.Owners = newOwners;
             }
         }
         UpdateInventoryTemplate(ent);
+        DirtyField(ent, ent.Comp, nameof(InventoryComponent.TemplateId));
     }
 
     private void ShutdownSlots()
@@ -123,7 +123,7 @@ public partial class InventorySystem : EntitySystem
     {
         var invTemplates = new List<InventoryTemplatePrototype>();
         var allSlots = new List<SlotDefinition>();
-        var invOwners = new List<EntityUid?>();
+        var invOwners = new List<EntityUid>();
         for (int i = 0; i < ent.Comp.TemplateId.Length; i++)
         {
             if (!ProtoMan.Resolve(ent.Comp.TemplateId[i], out var invTemplate))
@@ -156,7 +156,7 @@ public partial class InventorySystem : EntitySystem
         for (var j = 0; j < ent.Comp.Containers.Length; j++)
         {
             var slot = ent.Comp.Slots[j];
-            var container = _containerSystem.EnsureContainer<ContainerSlot>(invOwners[j]?? ent.Owner, slot.Name);
+            var container = _containerSystem.EnsureContainer<ContainerSlot>(invOwners[j] != EntityUid.Invalid ? invOwners[j] : ent.Owner, slot.Name);
             container.OccludesLight = false;
             ent.Comp.Containers[j] = container;
         }
