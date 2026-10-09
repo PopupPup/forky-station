@@ -1054,4 +1054,36 @@
   id: 123
   time: '2026-10-08T18:12:34Z'
   url: https://github.com/funky-station/forky-station/pull/499
+- author: AraiMaia
+  changes:
+  - message: Reagent fires set you on fire.
+    type: Tweak
+  id: 124
+  time: '2026-10-08T21:32:46Z'
+  url: https://github.com/funky-station/forky-station/pull/573
+- author: mycobiota
+  changes:
+  - message: Added a "Radio channel theme" dropdown to the general tab of options
+      that lets you choose between Wizden radio colors and Funky radio colors. (Funky
+      is selected by default)
+    type: Add
+  id: 125
+  time: '2026-10-08T21:43:54Z'
+  url: https://github.com/funky-station/forky-station/pull/563
+- author: mycobiota
+  changes:
+  - message: Made the union hardhat functional, with a light
+    type: Add
+  - message: Fixed some hardhat resprites
+    type: Fix
+  id: 126
+  time: '2026-10-08T21:47:57Z'
+  url: https://github.com/funky-station/forky-station/pull/539
+- author: mkanke
+  changes:
+  - message: Tweaked and expanded coat inventories
+    type: Tweak
+  id: 127
+  time: '2026-10-08T21:55:06Z'
+  url: https://github.com/funky-station/forky-station/pull/544
 Order: -1
