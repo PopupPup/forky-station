@@ -6,18 +6,18 @@ namespace Content.Shared._Funkystation.Inventory;
 [Flags, Serializable]
 public enum FunkyInventorySlotEnum
 {
-    Head =          0b0000_0000_0000_0001,
-    Eyes =          0b0000_0000_0000_0010,
-    Ears =          0b0000_0000_0000_0100,
-    Mask =          0b0000_0000_0000_1000,
-    OuterClothing = 0b0000_0000_0001_0000,
-    InnerClothing = 0b0000_0000_0010_0000,
-    Neck =          0b0000_0000_0100_0000,
-    Back =          0b0000_0000_1000_0000,
-    Belt =          0b0000_0001_0000_0000,
-    Gloves =        0b0000_0010_0000_0000,
-    Pocket =        0b0000_0100_0000_0000,
-    Feet =          0b0000_1000_0000_0000,
-    SuitStorage =   0b0001_0000_0000_0000,
-    Weapon =        0b0010_0000_0000_0000, // Funky slot type. If you want to disable this, find where it's used in YAML and remove it there. Do NOT comment it out here.
+    Head =          1 << 00,
+    Eyes =          1 << 01,
+    Ears =          1 << 02,
+    Mask =          1 << 03,
+    OuterClothing = 1 << 04,
+    InnerClothing = 1 << 05,
+    Neck =          1 << 06,
+    Back =          1 << 07,
+    Belt =          1 << 08,
+    Gloves =        1 << 09,
+    Pocket =        1 << 10,
+    Feet =          1 << 11,
+    SuitStorage =   1 << 12,
+    Weapon =        1 << 13, // Funky slot type. If you want to disable this, find where it's used in YAML and remove it there. Do NOT comment it out here.
 }
