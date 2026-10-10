@@ -11,6 +11,5 @@ public sealed partial class FunkyInventoryComponent : Component
     [DataField(serverOnly: true)]
     public HashSet<(FunkyInventoryTemplate, EntityUid)> Templates { get; private set; }
 
-    [DataField]
-    public List<FunkyInventorySlot> Slots { get; private set; }
+    public List<FunkyInventorySlotEnum> Slots { get; private set; }
 }

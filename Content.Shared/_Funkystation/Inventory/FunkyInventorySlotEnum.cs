@@ -1,7 +1,7 @@
 namespace Content.Shared._Funkystation.Inventory;
 /// <summary>
 /// <para> The type of an inventory (hotbar) slot. </para>
-/// <para> Specifies behavior like location on the HUD as well as human-readable naming for the storage.</para>
+/// <para> Specifies behavior like location on the HUD and whitelist as well as human-readable naming for the storage.</para>
 /// </summary>
 [Flags, Serializable]
 public enum FunkyInventorySlotEnum

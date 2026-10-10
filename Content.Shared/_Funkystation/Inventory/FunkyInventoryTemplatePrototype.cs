@@ -8,6 +8,6 @@ public sealed partial class FunkyInventoryTemplatePrototype : IPrototype
     [IdDataField]
     public string ID { get; private set; } = string.Empty;
 
-    [DataField]
-    public List<FunkyInventorySlot> Slots { get; private set; }
+    [DataField(required: true)]
+    public List<FunkyInventorySlotEnum> Slots { get; private set; }
 }
