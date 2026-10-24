@@ -638,7 +638,7 @@
       Dead:
         Base: dead
   - type: MobPrice
-    price: 50
+    price: 100
   - type: NPCRetaliation
   - type: FactionException
   - type: NpcFactionMember
@@ -653,7 +653,7 @@
     - trigger:
         !type:DamageTypeTrigger
         damageType: Blunt
-        damage: 20
+        damage: 100
       behaviors:
       - !type:GibBehavior
         recursive: false
