@@ -80,7 +80,9 @@
   components:
   - type: Body
   - type: VisualBody
-  - type: Hands
+  # START FUNKY CHANGES
+  # - type: Hands
+  # END FUNKY CHANGES
   - type: ComplexInteraction
   - type: ContainerContainer
   - type: Appearance

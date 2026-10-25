@@ -1,0 +1,15 @@
+- type: funkyInventoryTemplate
+  id: baseBiped
+  inheritable: false
+  slots:
+  - feet
+  - innerClothing
+  - outerClothing
+  - gloves
+  - neck
+  - mouth
+  - eyes
+  - ears
+  - head
+  - belt
+  - back

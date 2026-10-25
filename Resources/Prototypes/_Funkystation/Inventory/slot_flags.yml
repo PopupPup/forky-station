@@ -1,0 +1,38 @@
+- type: Tag
+  id: SlotFeetEquipable
+
+- type: Tag
+  id: SlotInnerClothingEquipable
+
+- type: Tag
+  id: SlotOuterClothingEquipable
+
+- type: Tag
+  id: SlotGlovesEquipable
+
+- type: Tag
+  id: SlotNeckEquipable
+
+- type: Tag
+  id: SlotMouthEquipable
+
+- type: Tag
+  id: SlotEyesEquipable
+
+- type: Tag
+  id: SlotEarsEquipable
+
+- type: Tag
+  id: SlotHeadEquipable
+
+- type: Tag
+  id: SlotSuitStorageEquipable
+
+- type: Tag
+  id: SlotBeltEquipable
+
+- type: Tag
+  id: SlotBackEquipable
+
+- type: Tag
+  id: SlotGunStorageEquipable

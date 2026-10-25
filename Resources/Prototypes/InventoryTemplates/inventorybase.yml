@@ -2,8 +2,11 @@
   abstract: true
   id: InventoryBase
   components:
-    - type: Inventory
-    - type: InventorySlots
+  # START FUNKY CHANGES
+  #- type: Inventory
+  #- type: InventorySlots
+  - type: FunkyInventory
+  # END FUNKY CHANGES
 
 - type: entity
   abstract: true

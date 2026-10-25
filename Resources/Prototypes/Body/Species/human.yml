@@ -55,13 +55,16 @@
   categories: [ HideSpawnMenu ]
   name: human appearance
   components:
-  - type: Inventory
-    femaleDisplacements:
-      jumpsuit:
-        sizeMaps:
-          32:
-            sprite: Mobs/Species/Human/displacement.rsi
-            state: jumpsuit-female
+  # FUNKY CHANGES START
+  #- type: Inventory
+  #  femaleDisplacements:
+  #    jumpsuit:
+  #      sizeMaps:
+  #        32:
+  #          sprite: Mobs/Species/Human/displacement.rsi
+  #          state: jumpsuit-female
+  - type: FunkyInventory
+  # FUNKY CHANGES END
   - type: InitialBody
     organs:
       Torso: OrganHumanTorso

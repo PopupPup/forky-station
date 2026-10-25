@@ -1,0 +1,96 @@
+- type: funkyInventorySlot
+  id: feet
+  stripMenuPosition: 4,1
+  whitelist:
+    tags:
+    - SlotFeetEquipable
+
+- type: funkyInventorySlot
+  id: innerClothing
+  stripMenuPosition: 3,0
+  whitelist:
+    tags:
+    - SlotInnerClothingEquipable
+
+- type: funkyInventorySlot
+  id: outerClothing
+  stripMenuPosition: 3,1
+  whitelist:
+    tags:
+    - SlotOuterClothingEquipable
+
+- type: funkyInventorySlot
+  id: gloves
+  stripMenuPosition: 3,2
+  whitelist:
+    tags:
+    - SlotGlovesEquipable
+
+- type: funkyInventorySlot
+  id: neck
+  stripMenuPosition: 2,0
+  whitelist:
+    tags:
+     - SlotNeckEquipable
+
+- type: funkyInventorySlot
+  id: mouth
+  stripMenuPosition: 2,1
+  whitelist:
+    tags:
+    - SlotMouthEquipable
+
+- type: funkyInventorySlot
+  id: eyes
+  stripMenuPosition: 1,0
+  whitelist:
+    tags:
+    - SlotEyesEquipable
+
+- type: funkyInventorySlot
+  id: ears
+  stripMenuPosition: 1,2
+  whitelist:
+    tags:
+    - SlotEarsEquipable
+
+- type: funkyInventorySlot
+  id: head
+  stripMenuPosition: 1,1
+  whitelist:
+    tags:
+    - SlotHeadEquipable
+
+- type: funkyInventorySlot
+  id: pocket
+  stripMenuPosition: 5,0
+  maxItemSize: Small
+
+- type: funkyInventorySlot
+  id: suitStorage
+  stripMenuPosition: 6,2
+  whitelist:
+    tags:
+    - SlotSuitStorageEquipable
+    - SlotGunStorageEquipable
+
+- type: funkyInventorySlot
+  id: belt
+  stripMenuPosition: 6,1
+  whitelist:
+    tags:
+    - SlotBeltEquipable
+
+- type: funkyInventorySlot
+  id: back
+  stripMenuPosition: 6,0
+  whitelist:
+    tags:
+    - SlotBackEquipable
+
+- type: funkyInventorySlot
+  id: gunStorage
+  stripMenuPosition: 5,2
+  whitelist:
+    tags:
+    - SlotGunStorageEquipable

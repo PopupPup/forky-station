@@ -1,0 +1,19 @@
+- type: funkyInventoryTemplate
+  id: baseJumpsuit
+  inheritable: true
+  slots:
+  - pocket
+  - pocket
+
+- type: funkyInventoryTemplate
+  id: baseSpacesuit
+  inheritable: true
+  slots:
+  - suitStorage
+
+- type: funkyInventoryTemplate
+  id: gunSpacesuit
+  inheritable: true
+  slots:
+  - suitStorage
+  - gunStorage
