@@ -1,0 +1,13 @@
+<widgets:Hotbar
+    xmlns="https://spacestation14.io"
+
+    xmlns:widgets="clr-namespace:Content.Client._Funkystation.UserInterface.Inventory.Widgets"
+    Name="FunkyHotbar"
+    VerticalExpand="True"
+    VerticalAlignment="Bottom"
+    Orientation="Vertical"
+    HorizontalAlignment="Center">
+    <BoxContainer>
+        <Button Text="CL1CK F0R FR33 HAX"/>
+    </BoxContainer>
+</widgets:Hotbar>

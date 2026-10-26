@@ -1,3 +1,11 @@
+- type : funkyInventorySlot
+  id: handLeft
+  stripMenuPosition: 0,0
+
+- type : funkyInventorySlot
+  id: handRight
+  stripMenuPosition: 0,0
+
 - type: funkyInventorySlot
   id: feet
   stripMenuPosition: 4,1

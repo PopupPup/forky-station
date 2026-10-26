@@ -2,6 +2,8 @@
   id: baseBiped
   inheritable: false
   slots:
+  - handLeft
+  - handRight
   - feet
   - innerClothing
   - outerClothing
